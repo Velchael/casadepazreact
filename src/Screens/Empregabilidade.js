@@ -11,15 +11,17 @@ function Empregabilidade() {
         <h4>
         Projeto A.M.O Salvador é composto por três siglas: Ação, Missão e Oração.
         </h4>
-        <p>
-              <strong>Ação:</strong> Trazer as boas novas da salvação</p>
+        <div class="align-right">
+              <p><strong>Ação:</strong> Trazer as boas novas da salvação</p>
               <p><strong>Missão: </strong>Vá e faça discípulos, treinando. </p> 
-               <p><strong>Oração: </strong> Oração e amor pelos necesitados. </p>
-               <p><strong>AMO: </strong>Salvador é levar o Evangelismo nas comunidades de forma dinâmica,
+              <p><strong>Oração: </strong> Oração e amor pelos necesitados. </p>
+              <p><strong>AMO: </strong>Salvador é levar o Evangelismo nas comunidades de forma dinâmica,
                  doando uma porção da palavra de Deus.</p>
-        <img className="imgempregadois" src="/img/barrasalvador.jpg" alt="" />
-        <img className="imgempregadois" src="/img/porto.jpg" alt="" />
+        </div>
        
+          <img className="imgempregadois" src="/img/barrasalvador.jpg" alt="" />
+         <img className="imgempregadois" src="/img/porto.jpg" alt="" />
+      
       </div>
 
       <div className="Containerdos">
@@ -29,9 +31,9 @@ function Empregabilidade() {
 
         <img className="imgempregadois" src="/img/separte.jpg" alt="" />
 
-        <h3>“Nos fornecemos o entrenamineto, postila de trabalho e saida com misioneros entrenados  "</h3>
+        <h3>“Nos fornecemos o entrenamineto, postila de trabalho e saida com misioneros"</h3>
         
-        <p>oferecemos a você uma experiência maravilhosa importante, duradoura e comprovada.
+        <p>Oferecemos a você uma experiência maravilhosa importante, duradoura e comprovada.
             
         </p>
         <h5>E como pregarão, se não forem enviados? como está escrito: Quão formosos os pés dos que anunciam o evangelho de paz;

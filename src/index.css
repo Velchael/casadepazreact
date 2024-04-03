@@ -140,6 +140,7 @@ main {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+
 }
 
 .Containerdos ul li {
@@ -197,11 +198,13 @@ p {
   text-align: center;
 }
 
+
 .imgempregadois {
-  width: 50%;
+  width: 48%;
   max-width: 400px;
   height: auto;
-  margin-bottom: 20px;
+ /* margin-bottom: 20px;
+  margin-right: 20px;*/
   border-radius: 5px;
   box-shadow: 0 3px 4px #ca932b;
   cursor: pointer;
@@ -261,6 +264,10 @@ footer {
   justify-content: center;
   margin-bottom: 0px;
   margin-top: 0px;
+}
+
+.align-right {
+  text-align: right;
 }
 
 .carrusel-itemdos {
