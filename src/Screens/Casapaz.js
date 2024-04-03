@@ -47,7 +47,7 @@ const Casapaz = () => {
       <div className="imgservicodois">
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect style={{ backgroundColor: '#ca932b' }}>
         <Navbar.Brand className="mx-auto">
-          Sete derramamentos do Sangue de Jesus
+          7 derramamento do Sangue de Jesus
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
