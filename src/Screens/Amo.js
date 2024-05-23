@@ -1,6 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
-function Empregabilidade() {
+function Amo() {
   return (
     <section>
       <Helmet>
@@ -70,4 +70,4 @@ function Empregabilidade() {
 
   );
 }
-export default Empregabilidade;
+export default Amo;

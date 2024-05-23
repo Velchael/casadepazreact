@@ -1,0 +1,708 @@
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import { Helmet } from 'react-helmet-async';
+
+export default function SeInscrever() {
+  const { search } = useLocation();
+  const redirectInUrl = new URLSearchParams(search).get('redirect');
+  const redirect = redirectInUrl ? redirectInUrl : '/';
+
+  // Estado para almacenar los valores del formulario
+  const [formData, setFormData] = useState({
+    nome: '',
+    email: '',
+    password: ''
+  });
+
+  // Manejar cambios en los campos de entrada
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value
+    }));
+  };
+
+  // Manejar el envío del formulario
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Aquí puedes manejar el envío del formulario
+    // Por ejemplo, enviar los datos a un servidor
+    console.log(formData);
+  };
+
+  return (
+    <Container className="small-container">
+      <Helmet>
+        <title>Login</title>
+      </Helmet>
+      <h1 className="my-3">Login...</h1>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group className="mb-3" controlId="nome">
+          <Form.Label>Nome</Form.Label>
+          <Form.Control
+            type="text"
+            required
+            placeholder="Digite seu nome"
+            value={formData.nome}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="email">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            type="email"
+            required
+            placeholder="exemplo@gmail.com"
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="password">
+          <Form.Label>Senha</Form.Label>
+          <Form.Control
+            type="password"
+            required
+            placeholder="Digite sua senha"
+            value={formData.password}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <div className="mb-3">
+          <Button type="submit">Entrar</Button>
+        </div>
+        <div className="mb-3">
+          Novo usuário?{' '}
+          <Link to={`/signup?redirect=${redirect}`}>Crie sua conta</Link>
+        </div>
+      </Form>
+    </Container>
+  );
+}
+////////////////////////////// con la url del servidor y verificacion de error edicion inscrivir 2
+
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
+import { Helmet } from 'react-helmet-async';
+
+export default function SeInscrever() {
+  const { search } = useLocation();
+  const redirectInUrl = new URLSearchParams(search).get('redirect');
+  const redirect = redirectInUrl ? redirectInUrl : '/';
+
+  // Estado para almacenar los valores del formulario
+  const [formData, setFormData] = useState({
+    nome: '',
+    email: '',
+    password: ''
+  });
+
+  // Estado para manejar mensajes de éxito y error
+  const [message, setMessage] = useState({ type: '', text: '' });
+
+  // Manejar cambios en los campos de entrada
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value
+    }));
+  };
+
+  // Manejar el envío del formulario
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Configuración de la solicitud fetch
+    try {
+      const response = await fetch('https://intelsiteweb.com/appnode/users/login', {
+       
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // Especifica que el cuerpo de la solicitud es JSON
+        },
+        credentials: 'include', // Incluye credenciales en la solicitud
+        body: JSON.stringify(formData), // Convierte el objeto formData a JSON y lo envía en el cuerpo
+      });
+
+      const data = await response.json(); // Convierte la respuesta a JSON
+
+      if (response.ok) {
+        // Si la respuesta es exitosa
+        setMessage({ type: 'success', text: 'Usuário logado com sucesso!' });
+        // Redirige al usuario después de un inicio de sesión exitoso
+        setTimeout(() => {
+          window.location.href = redirect;
+        }, 2000); // Redirige después de 2 segundos
+      } else {
+        // Manejo de errores del servidor
+        setMessage({ type: 'danger', text: data.message || 'Usuário não existe.' });
+      }
+    } catch (error) {
+      // Manejo de errores de la red o otros errores
+      setMessage({ type: 'danger', text: 'Erro na rede. Tente novamente mais tarde.' });
+    }
+  };
+
+  return (
+    <Container className="small-container">
+      <Helmet>
+        <title>Login</title>
+      </Helmet>
+      <h1 className="my-3">Login...</h1>
+      <Form onSubmit={handleSubmit}>
+        {message.text && (
+          <Alert variant={message.type}>
+            {message.text}
+          </Alert>
+        )}
+        <Form.Group className="mb-3" controlId="nome">
+          <Form.Label>Nome</Form.Label>
+          <Form.Control
+            type="text"
+            required
+            placeholder="Digite seu nome"
+            value={formData.nome}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="email">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            type="email"
+            required
+            placeholder="exemplo@gmail.com"
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="password">
+          <Form.Label>Senha</Form.Label>
+          <Form.Control
+            type="password"
+            required
+            placeholder="Digite sua senha"
+            value={formData.password}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <div className="mb-3">
+          <Button type="submit">Entrar</Button>
+        </div>
+        <div className="mb-3">
+          Novo usuário?{' '}
+          <Link to={`/signup?redirect=${redirect}`}>Crie sua conta</Link>
+        </div>
+      </Form>
+    </Container>
+  );
+}
+     ////////////////////////////////////////////// tersera edicion inscrivir
+
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
+import { Helmet } from 'react-helmet-async';
+
+export default function SeInscrever() {
+  const { search } = useLocation();
+  const redirectInUrl = new URLSearchParams(search).get('redirect');
+  const redirect = redirectInUrl ? redirectInUrl : '/';
+
+  // Estado para almacenar los valores del formulario
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: ''
+  });
+
+  // Estado para manejar mensajes de éxito y error
+  const [message, setMessage] = useState({ type: '', text: '' });
+
+  // Manejar cambios en los campos de entrada
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value
+    }));
+  };
+
+  // Manejar el envío del formulario
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Configuración de la solicitud fetch
+    try {
+      const response = await fetch('http://127.0.0.1:3307/users/login', {
+       
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // Especifica que el cuerpo de la solicitud es JSON
+        },
+        credentials: 'include', // Incluye credenciales en la solicitud
+        body: JSON.stringify(formData), // Convierte el objeto formData a JSON y lo envía en el cuerpo
+      });
+
+      const data = await response.json(); // Convierte la respuesta a JSON
+
+      if (response.ok) {
+        // Si la respuesta es exitosa
+        setMessage({ type: 'success', text: 'Usuário logado com sucesso!' });
+        // Redirige al usuario después de un inicio de sesión exitoso
+        setTimeout(() => {
+          window.location.href = redirect;
+        }, 3000); // Redirige después de 3 segundos
+      } else {
+        // Manejo de errores del servidor
+        setMessage({ type: 'danger', text: data.message || 'Usuário não existe.' });
+      }
+    } catch (error) {
+      // Manejo de errores de la red o otros errores
+      setMessage({ type: 'danger', text: 'Erro na rede. Tente novamente mais tarde.' });
+    }
+  };
+
+  return (
+    <Container className="small-container">
+      <Helmet>
+        <title>Login</title>
+      </Helmet>
+      <h1 className="my-3">Login...</h1>
+      <Form onSubmit={handleSubmit}>
+        {message.text && (
+          <Alert variant={message.type}>
+            {message.text}
+          </Alert>
+        )}
+        <Form.Group className="mb-3" controlId="username">
+          <Form.Label>Nome</Form.Label>
+          <Form.Control
+            type="text"
+            required
+            placeholder="Digite seu nome"
+            value={formData.username}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="email">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            type="email"
+            required
+            placeholder="exemplo@gmail.com"
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="password">
+          <Form.Label>Senha</Form.Label>
+          <Form.Control
+            type="password"
+            required
+            placeholder="Digite sua senha"
+            value={formData.password}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <div className="mb-3">
+          <Button type="submit">Entrar</Button>
+        </div>
+        <div className="mb-3">
+          Novo usuário?{' '}
+          <Link to={`/signup?redirect=${redirect}`}>Crie sua conta</Link>
+        </div>
+      </Form>
+    </Container>
+  );
+}
+////////////////////////////////////// se inscrivir edicion 4
+
+
+import React, { useState, useContext } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
+import { Helmet } from 'react-helmet-async';
+import { UserContext } from '../UserContext';
+
+export default function SeInscrever() {
+  const { search } = useLocation();
+  const redirectInUrl = new URLSearchParams(search).get('redirect');
+  const redirect = redirectInUrl ? redirectInUrl : '/';
+  const { setUser } = useContext(UserContext);
+  // Estado para almacenar los valores del formulario
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: ''
+  });
+
+  // Estado para manejar mensajes de éxito y error
+  const [message, setMessage] = useState({ type: '', text: '' });
+
+  // Manejar cambios en los campos de entrada
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value
+    }));
+  };
+
+  // Manejar el envío del formulario
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Configuración de la solicitud fetch
+    try {
+      const response = await fetch('http://127.0.0.1:3307/users/login', {
+       
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // Especifica que el cuerpo de la solicitud es JSON
+        },
+        credentials: 'include', // Incluye credenciales en la solicitud
+        body: JSON.stringify(formData), // Convierte el objeto formData a JSON y lo envía en el cuerpo
+      });
+
+      const data = await response.json(); // Convierte la respuesta a JSON
+
+      if (response.ok) {
+        // Si la respuesta es exitosa
+        setMessage({ type: 'success', text: 'Usuário logado com sucesso!' });
+
+        setUser({ username: formData.username });
+        // Redirige al usuario después de un inicio de sesión exitoso
+        //setTimeout(() => {
+        //  window.location.href = redirect;
+       // }, 3000); // Redirige después de 3 segundos
+      } else {
+        // Manejo de errores del servidor
+        setMessage({ type: 'danger', text: data.message || 'Usuário não existe.' });
+      }
+    } catch (error) {
+      // Manejo de errores de la red o otros errores
+      setMessage({ type: 'danger', text: 'Erro na rede. Tente novamente mais tarde.' });
+    }
+  };
+
+  return (
+    <Container className="small-container">
+      <Helmet>
+        <title>Login</title>
+      </Helmet>
+      <h1 className="my-3">Login...</h1>
+      <Form onSubmit={handleSubmit}>
+        {message.text && (
+          <Alert variant={message.type}>
+            {message.text}
+          </Alert>
+        )}
+        <Form.Group className="mb-3" controlId="username">
+          <Form.Label>Nome</Form.Label>
+          <Form.Control
+            type="text"
+            required
+            placeholder="Digite seu nome"
+            value={formData.username}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="email">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            type="email"
+            required
+            placeholder="exemplo@gmail.com"
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="password">
+          <Form.Label>Senha</Form.Label>
+          <Form.Control
+            type="password"
+            required
+            placeholder="Digite sua senha"
+            value={formData.password}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <div className="mb-3">
+          <Button type="submit">Entrar</Button>
+        </div>
+        <div className="mb-3">
+          Novo usuário?{' '}
+          <Link to={`/signup?redirect=${redirect}`}>Crie sua conta</Link>
+        </div>
+      </Form>
+    </Container>
+  );
+}
+/////////////////////////////////// edicion 5 de seinscrever
+
+
+import React, { useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
+import { Helmet } from 'react-helmet-async';
+import { UserContext } from '../UserContext';
+
+export default function SeInscrever() {
+  //const { search } = useLocation();
+  //const redirectInUrl = new URLSearchParams(search).get('redirect');
+  //const redirect = redirectInUrl ? redirectInUrl : '/';
+  const { setUser } = useContext(UserContext);
+
+  const [isSignup, setIsSignup] = useState(false);
+  
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+
+  const [message, setMessage] = useState({ type: '', text: '' });
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (isSignup && formData.password !== formData.confirmPassword) {
+      setMessage({ type: 'danger', text: 'As senhas não coincidem.' });
+      return;
+    }
+
+    const url = isSignup 
+      ? 'http://127.0.0.1:3307/users'
+      : 'http://127.0.0.1:3307/users/login';
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage({ type: 'success', text: isSignup ? 'Um e-mail chegará em sua conta de correio para concluir seu cadastro, confirme...' : 'Usuário logado com sucesso!' });
+
+        if (!isSignup) {
+          setUser({ username: formData.username });
+        }
+        //setTimeout(() => {
+         // window.location.href = redirect;
+        //}, 3000);
+      } else {
+        setMessage({ type: 'danger', text: data.message || (isSignup ? 'Erro ao registrar o usuário.' : 'Usuário não existe.') });
+      }
+    } catch (error) {
+      setMessage({ type: 'danger', text: 'Erro na rede. Tente novamente mais tarde.' });
+    }
+  };
+
+  return (
+    <Container className="small-container">
+      <Helmet>
+        <title>{isSignup ? 'Registro' : 'Login'}</title>
+      </Helmet>
+      <h1 className="my-3">{isSignup ? 'Registro' : 'Login'}</h1>
+      <Form onSubmit={handleSubmit}>
+        {message.text && (
+          <Alert variant={message.type}>
+            {message.text}
+          </Alert>
+        )}
+        <Form.Group className="mb-3" controlId="username">
+          <Form.Label>Nome</Form.Label>
+          <Form.Control
+            type="text"
+            required
+            placeholder="Digite seu nome"
+            value={formData.username}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="email">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            type="email"
+            required
+            placeholder="exemplo@gmail.com"
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="password">
+          <Form.Label>Senha</Form.Label>
+          <Form.Control
+            type="password"
+            required
+            placeholder="Digite sua senha"
+            value={formData.password}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        {isSignup && (
+          <Form.Group className="mb-3" controlId="confirmPassword">
+            <Form.Label>Confirme a Senha</Form.Label>
+            <Form.Control
+              type="password"
+              required
+              placeholder="Confirme sua senha"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+            />
+          </Form.Group>
+        )}
+        <div className="mb-3">
+          <Button type="submit">{isSignup ? 'Registrar' : 'Entrar'}</Button>
+        </div>
+        <div className="mb-3">
+          {isSignup ? (
+            <span>
+              Já tem uma conta?{' '}
+              <Link to="#" onClick={() => setIsSignup(false)}>Entrar</Link>
+            </span>
+          ) : (
+            <span>
+              Novo usuário?{' '}
+              <Link to="#" onClick={() => setIsSignup(true)}>Crie sua conta</Link>
+            </span>
+          )}
+        </div>
+      </Form>
+    </Container>
+  );
+}
+
+
+
+
+
+
+
+
+////////////////////////app.js edicion uno
+import React from 'react';
+import { BrowserRouter, Route, Routes, NavLink, } from 'react-router-dom';
+import logo_large from './logo_large.jpeg';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Casapaz from './Screens/Casapaz';
+import Seinscrever from './Screens/Seinscrever';
+import Amo from './Screens/Amo';
+import Fidelidade from './components/Fidelidade';
+import Redecao from './components/Redecao';
+import Conquista from './components/Conquista';
+import Identidad from './components/Identidad';
+import Productividade from './components/Productividade';
+import Proposito from './components/Proposito';
+import Consagracao from './components/Consagracao';
+import SocialMediaButtons from './components/SocialMediaButtons'; 
+import Navbar from 'react-bootstrap/Navbar';
+import Container from 'react-bootstrap/Container';
+import { LinkContainer } from 'react-router-bootstrap';
+import { Helmet } from 'react-helmet-async';
+export default function App() {
+  return (
+    <BrowserRouter>
+      <div className='d-flex flex-column site-container'>
+        <Helmet>
+          <title>Casa de Paz</title>
+        </Helmet>
+        <header>
+          <Navbar className='menu-header'>
+            <Container>
+              <LinkContainer to="/" exact>
+                <Navbar.Brand>
+                  <img src={logo_large} className="App-logo" alt="logo" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+                </Navbar.Brand>
+              </LinkContainer>              
+              <div className='menu'>             
+                <NavLink to="/Casapaz" style={({ isActive }) => ({
+                  textDecoration: 'none',
+                  color: isActive ? 'white' : 'black',
+                  marginRight: '13px'
+                })}>
+                  Casapaz
+                </NavLink>
+                <NavLink to="/Amo" style={({ isActive }) => ({
+                  textDecoration: 'none',
+                  color: isActive ? 'white' : 'black',
+                  marginRight: '13px'
+                })}>
+                  A.M.O 
+                </NavLink>
+                <NavLink to="/Seinscrever" style={({ isActive }) => ({
+                  textDecoration: 'none',
+                  color: isActive ? 'white' : 'black',
+                  marginRight: '13px'
+                })}>
+                  Registro
+                </NavLink>
+              </div>
+            </Container>
+          </Navbar>
+        </header>
+        <main>
+          <Container className="mt-3">
+            <Routes>
+              <Route path="/" element={<Casapaz />} />
+              <Route path="/Casapaz" element={<Casapaz />} >
+                <Route path="Fidelidade" element={<Fidelidade />} />
+                <Route path="Redecao" element={<Redecao />} />
+                <Route path="Conquista" element={<Conquista />} />
+                <Route path="Identidad" element={<Identidad />} />
+                <Route path="Productividade" element={<Productividade />} />
+                <Route path="Proposito" element={<Proposito />} />
+                <Route path="Consagracao" element={<Consagracao />} />
+              </Route>
+              <Route path="/Amo" element={<Amo />} />
+              <Route path="/Seinscrever" element={<Seinscrever />} />
+            </Routes>
+          </Container>
+        </main>
+        <footer>
+            {/* Contenido del footer */}
+            <Container className="text-center">
+            {/* Agregar los botones de redes sociales */}
+            <SocialMediaButtons />
+            <p>
+              &copy; 2023 Todos os Dereitos Reservados
+            </p>
+          </Container>
+        </footer>
+      </div>
+    </BrowserRouter >
+  );
+}
+
