@@ -43,7 +43,7 @@ export default function SeInscrever() {
   // Función para verificar si el usuario existe
   const userExists = async (username, email, password) => {
     try {
-      const response = await fetch('http://127.0.0.1:3307/users/login', {
+      const response = await fetch('https://intelsiteweb.com/appnode/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,8 +81,8 @@ export default function SeInscrever() {
     }
 
     const url = isSignup 
-      ? 'http://127.0.0.1:3307/users'
-      : 'http://127.0.0.1:3307/users/login';
+      ? 'https://intelsiteweb.com/appnode/users'
+      : 'https://intelsiteweb.com/appnode/users/login';
 
     try {
       const response = await fetch(url, {
