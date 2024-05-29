@@ -18,7 +18,7 @@ const EmailConfirmation = () => {
     }
 
     try {
-      const response = await fetch(`https://intelsiteweb.com/appnode/users/confirm`, {
+      const response = await fetch(`http://127.0.0.1:3307/users/confirm`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

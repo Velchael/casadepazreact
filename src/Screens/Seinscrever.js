@@ -4,6 +4,8 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { Helmet } from 'react-helmet-async';
 import { UserContext } from '../UserContext';
 
@@ -11,12 +13,21 @@ export default function SeInscrever() {
   const { setUser } = useContext(UserContext);
 
   const [isSignup, setIsSignup] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     username: '',
+    apellido: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    rol: 'miembro',  // Valor por defecto para rol
+    confirmPassword: '',
+    fecha_nacimiento: '',
+    telefono: '',
+    direccion: '',
+    nivel_liderazgo: 'Nivel1',
+    grupo_familiar_id: '',
+    estado: 'activo',
+    foto_perfil: ''
   });
 
   const [message, setMessage] = useState({ type: '', text: '' });
@@ -32,13 +43,13 @@ export default function SeInscrever() {
   // Función para verificar si el usuario existe
   const userExists = async (username, email, password) => {
     try {
-      const response = await fetch('https://intelsiteweb.com/appnode/users/login', {
+      const response = await fetch('http://127.0.0.1:3307/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ username, email, password }) // No enviamos la contraseña
+        body: JSON.stringify({ username, email, password })
       });
 
       if (response.status === 200) {
@@ -70,8 +81,8 @@ export default function SeInscrever() {
     }
 
     const url = isSignup 
-      ? 'https://intelsiteweb.com/appnode/users'
-      : 'https://intelsiteweb.com/appnode/users/login';
+      ? 'http://127.0.0.1:3307/users'
+      : 'http://127.0.0.1:3307/users/login';
 
     try {
       const response = await fetch(url, {
@@ -86,13 +97,30 @@ export default function SeInscrever() {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage({ type: 'success', text: isSignup ? 'Um e-mail chegará em sua conta de correio para concluir seu cadastro, confirme...' : 'Usuário logado com sucesso!' });
-
+        setMessage({ type: 'success', 
+                     text: isSignup 
+                     ? 'Um e-mail chegará em sua conta de correio para concluir seu cadastro, confirme...'
+                     : 'Usuário logado com sucesso!' 
+                     });
+  
         if (!isSignup) {
           setUser({ username: formData.username });
         }
+      } else if (response.status === 409) {
+        setMessage({
+          type: 'danger',
+          text: 'O email já está registrado. Por favor, use outro email.',
+        });
+      } else if (response.status === 400 && data.message === 'Grupo familiar no encontrado') {
+        setMessage({
+          type: 'danger',
+          text: 'El grupo familiar especificado no existe. Por favor, verifica e intenta nuevamente.',
+        });
       } else {
-        setMessage({ type: 'danger', text: data.message || (isSignup ? 'Erro ao registrar o usuário.' : 'Usuário não existe.') });
+        setMessage({
+          type: 'danger',
+          text: data.message || (isSignup ? 'Erro ao registrar o usuário.' : 'Usuário não existe.'),
+        });
       }
     } catch (error) {
       setMessage({ type: 'danger', text: 'Erro na rede. Tente novamente mais tarde.' });
@@ -111,47 +139,185 @@ export default function SeInscrever() {
             {message.text}
           </Alert>
         )}
-        <Form.Group className="mb-3" controlId="username">
-          <Form.Label>Nome</Form.Label>
-          <Form.Control
-            type="text"
-            required
-            placeholder="Digite seu nome"
-            value={formData.username}
-            onChange={handleChange}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="email">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            required
-            placeholder="exemplo@gmail.com"
-            value={formData.email}
-            onChange={handleChange}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="password">
-          <Form.Label>Senha</Form.Label>
-          <Form.Control
-            type="password"
-            required
-            placeholder="Digite sua senha"
-            value={formData.password}
-            onChange={handleChange}
-          />
-        </Form.Group>
+        <Row>
+          <Col md={6}>
+            <Form.Group className="mb-3" controlId="username">
+              <Form.Label>Nome</Form.Label>
+              <Form.Control
+                type="text"
+                required
+                placeholder="Digite seu nome"
+                value={formData.username}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          {isSignup && (
+            <Col md={6}>
+              <Form.Group className="mb-3" controlId="apellido">
+                <Form.Label>Sobrenome</Form.Label>
+                <Form.Control
+                  type="text"
+                  required
+                  placeholder="Digite seu apellido"
+                  value={formData.apellido}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+          )}
+        </Row>
+        <Row>
+          <Col md={6}>
+            <Form.Group className="mb-3" controlId="email">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                required
+                placeholder="exemplo@gmail.com"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group className="mb-3" controlId="password">
+              <Form.Label>Senha</Form.Label>
+              <Form.Control
+                type="password"
+                required
+                placeholder="Digite sua senha"
+                value={formData.password}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
         {isSignup && (
-          <Form.Group className="mb-3" controlId="confirmPassword">
-            <Form.Label>Confirme a Senha</Form.Label>
-            <Form.Control
-              type="password"
-              required
-              placeholder="Confirme sua senha"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
-          </Form.Group>
+          <>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3" controlId="confirmPassword">
+                  <Form.Label>Confirme a Senha</Form.Label>
+                  <Form.Control
+                    type="password"
+                    required
+                    placeholder="Confirme sua senha"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3" controlId="rol">
+                  <Form.Label>Rol</Form.Label>
+                  <Form.Control
+                    as="select"
+                    required
+                    value={formData.rol}
+                    onChange={handleChange}
+                  >
+                    <option value="miembro">Miembro</option>
+                    <option value="lider">Líder</option>
+                    <option value="pastor">Pastor</option>
+                    <option value="administrador">Administrador</option>
+                  </Form.Control>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3" controlId="fecha_nacimiento">
+                  <Form.Label>Data de nascimento</Form.Label>
+                  <Form.Control
+                    type="date"
+                    required
+                    value={formData.fecha_nacimiento}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3" controlId="telefono">
+                  <Form.Label>Teléfone</Form.Label>
+                  <Form.Control
+                    type="text"
+                    required
+                    placeholder="Digite seu teléfono"
+                    value={formData.telefono}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3" controlId="direccion">
+                  <Form.Label>Endereço</Form.Label>
+                  <Form.Control
+                    type="text"
+                    required
+                    placeholder="Digite sua dirección"
+                    value={formData.direccion}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3" controlId="nivel_liderazgo">
+                  <Form.Label>Nível de liderança</Form.Label>
+                  <Form.Control
+                    as="select"
+                    value={formData.nivel_liderazgo}
+                    onChange={handleChange}
+                  >
+                    <option value="Nivel1">Nivel 1</option>
+                    <option value="Nivel2">Nivel 2</option>
+                    <option value="Nivel3">Nivel 3</option>
+                  </Form.Control>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3" controlId="grupo_familiar_id">
+                  <Form.Label>Grupo Familiar ID</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={formData.grupo_familiar_id}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3" controlId="estado">
+                  <Form.Label>Estado</Form.Label>
+                  <Form.Control
+                    as="select"
+                    value={formData.estado}
+                    onChange={handleChange}
+                  >
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                    <option value="pendiente">Pendiente</option>
+                  </Form.Control>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={12}>
+                <Form.Group className="mb-3" controlId="foto_perfil">
+                  <Form.Label>Imagem de perfil</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="URL da imagem de perfil"
+                    value={formData.foto_perfil}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          </>
         )}
         <div className="mb-3">
           <Button type="submit">{isSignup ? 'Registrar' : 'Entrar'}</Button>
