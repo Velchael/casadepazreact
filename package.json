@@ -42,5 +42,6 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-private-property-in-object": "^7.24.6"
-  }
+  },
+  "homepage": "https://casadepazdos.netlify.app"
 }
