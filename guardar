@@ -432,3 +432,21 @@ export default function SeInscrever() {
     </Container>
   );
 }
+
+/////////////////////mantener secion iniciada 
+<div className="mb-3">
+          <Button type="submit">{isSignup ? 'Registrar' : 'Entrar'}</Button>
+        </div>
+        <div className="mb-3">
+          {isSignup ? (
+            <span>
+              Já tem uma conta?{' '}
+              <Link to="#" onClick={() => setIsSignup(false)}>Entrar</Link>
+            </span>
+          ) : (
+            <span>
+              Novo usuário?{' '}
+              <Link to="#" onClick={() => setIsSignup(true)}>Crie sua conta</Link>
+            </span>
+          )}
+        </div>

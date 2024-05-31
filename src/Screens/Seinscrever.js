@@ -19,6 +19,7 @@ export default function SeInscrever() {
     apellido: '',
     email: '',
     password: '',
+    rememberMe: false, // Añadir rememberMe
     rol: 'miembro',  // Valor por defecto para rol
     confirmPassword: '',
     fecha_nacimiento: '',
@@ -113,6 +114,12 @@ export default function SeInscrever() {
   
         if (!isSignup) {
           setUser({ username: formData.username });
+          // Guardar token en localStorage si rememberMe está marcado
+        if (formData.rememberMe) {
+          localStorage.setItem('token', data.token);
+        } else {
+          sessionStorage.setItem('token', data.token);
+        }
         }
       } else if (response.status === 409) {
         setMessage({
@@ -329,21 +336,15 @@ export default function SeInscrever() {
             </Row>
           </>
         )}
-        <div className="mb-3">
-          <Button type="submit">{isSignup ? 'Registrar' : 'Entrar'}</Button>
+         <div className="mb-3">
+          <Button type="submit">
+            {isSignup ? 'Registrar' : 'Login'}
+          </Button>
         </div>
         <div className="mb-3">
-          {isSignup ? (
-            <span>
-              Já tem uma conta?{' '}
-              <Link to="#" onClick={() => setIsSignup(false)}>Entrar</Link>
-            </span>
-          ) : (
-            <span>
-              Novo usuário?{' '}
-              <Link to="#" onClick={() => setIsSignup(true)}>Crie sua conta</Link>
-            </span>
-          )}
+          <Link to="#" onClick={() => setIsSignup(!isSignup)}>
+            {isSignup ? 'Já tem uma conta? Faça login' : 'Não tem uma conta? Registre-se'}
+          </Link>
         </div>
       </Form>
     </Container>
