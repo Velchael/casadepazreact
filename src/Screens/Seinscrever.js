@@ -32,11 +32,19 @@ export default function SeInscrever() {
 
   const [message, setMessage] = useState({ type: '', text: '' });
 
+  //const handleChange = (e) => {
+  //  const { id, value } = e.target;
+  //  setFormData((prevData) => ({
+   //   ...prevData,
+   //   [id]: value
+   // }));
+  //};
+
   const handleChange = (e) => {
-    const { id, value } = e.target;
+    const { id, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [id]: value
+      [id]: type === 'checkbox' ? checked : value,
     }));
   };
 
@@ -149,6 +157,7 @@ export default function SeInscrever() {
                 placeholder="Digite seu nome"
                 value={formData.username}
                 onChange={handleChange}
+                autoComplete="username"
               />
             </Form.Group>
           </Col>
@@ -177,6 +186,7 @@ export default function SeInscrever() {
                 placeholder="exemplo@gmail.com"
                 value={formData.email}
                 onChange={handleChange}
+                autoComplete="email"
               />
             </Form.Group>
           </Col>
