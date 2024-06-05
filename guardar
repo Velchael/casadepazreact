@@ -1,139 +1,5 @@
 
 
-////////////////////////app.js edicion uno
-import React from 'react';
-import { BrowserRouter, Route, Routes, NavLink, } from 'react-router-dom';
-import logo_large from './logo_large.jpeg';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Casapaz from './Screens/Casapaz';
-import Seinscrever from './Screens/Seinscrever';
-import Amo from './Screens/Amo';
-import Fidelidade from './components/Fidelidade';
-import Redecao from './components/Redecao';
-import Conquista from './components/Conquista';
-import Identidad from './components/Identidad';
-import Productividade from './components/Productividade';
-import Proposito from './components/Proposito';
-import Consagracao from './components/Consagracao';
-import SocialMediaButtons from './components/SocialMediaButtons'; 
-import Navbar from 'react-bootstrap/Navbar';
-import Container from 'react-bootstrap/Container';
-import { LinkContainer } from 'react-router-bootstrap';
-import { Helmet } from 'react-helmet-async';
-export default function App() {
-  return (
-    <BrowserRouter>
-      <div className='d-flex flex-column site-container'>
-        <Helmet>
-          <title>Casa de Paz</title>
-        </Helmet>
-        <header>
-          <Navbar className='menu-header'>
-            <Container>
-              <LinkContainer to="/" exact>
-                <Navbar.Brand>
-                  <img src={logo_large} className="App-logo" alt="logo" style={{ maxWidth: '100%', maxHeight: '100%' }} />
-                </Navbar.Brand>
-              </LinkContainer>              
-              <div className='menu'>             
-                <NavLink to="/Casapaz" style={({ isActive }) => ({
-                  textDecoration: 'none',
-                  color: isActive ? 'white' : 'black',
-                  marginRight: '13px'
-                })}>
-                  Casapaz
-                </NavLink>
-                <NavLink to="/Amo" style={({ isActive }) => ({
-                  textDecoration: 'none',
-                  color: isActive ? 'white' : 'black',
-                  marginRight: '13px'
-                })}>
-                  A.M.O 
-                </NavLink>
-                <NavLink to="/Seinscrever" style={({ isActive }) => ({
-                  textDecoration: 'none',
-                  color: isActive ? 'white' : 'black',
-                  marginRight: '13px'
-                })}>
-                  Registro
-                </NavLink>
-              </div>
-            </Container>
-          </Navbar>
-        </header>
-        <main>
-          <Container className="mt-3">
-            <Routes>
-              <Route path="/" element={<Casapaz />} />
-              <Route path="/Casapaz" element={<Casapaz />} >
-                <Route path="Fidelidade" element={<Fidelidade />} />
-                <Route path="Redecao" element={<Redecao />} />
-                <Route path="Conquista" element={<Conquista />} />
-                <Route path="Identidad" element={<Identidad />} />
-                <Route path="Productividade" element={<Productividade />} />
-                <Route path="Proposito" element={<Proposito />} />
-                <Route path="Consagracao" element={<Consagracao />} />
-              </Route>
-              <Route path="/Amo" element={<Amo />} />
-              <Route path="/Seinscrever" element={<Seinscrever />} />
-            </Routes>
-          </Container>
-        </main>
-        <footer>
-            {/* Contenido del footer */}
-            <Container className="text-center">
-            {/* Agregar los botones de redes sociales */}
-            <SocialMediaButtons />
-            <p>
-              &copy; 2023 Todos os Dereitos Reservados
-            </p>
-          </Container>
-        </footer>
-      </div>
-    </BrowserRouter >
-  );
-}
-
-
-////////////////////manejo de error del id grupofamiliares
-
-if (response.ok) {
-  setMessage({ type: 'success', 
-               text: isSignup 
-               ? 'Um e-mail chegará em sua conta de correio para concluir seu cadastro, confirme...'
-               : 'Usuário logado com sucesso!' 
-               });
-
-  if (!isSignup) {
-    setUser({ username: formData.username });
-  }
-} else if (response.status === 409) {
-  // Manejar error HTTP 409: Correo electrónico ya registrado
-  setMessage({
-    type: 'danger',
-    text: 'O email já está registrado. Por favor, use outro email.',
-  });
- 
-} else if (data.message.includes('Grupo familiar no encontrado')){
-  setMessage({
-    type: 'danger',
-    text: 'El grupo familiar especificado no existe. Por favor, verifica e intenta nuevamente.',
-  }); 
-} else {
-  // Manejar otros errores
-  setMessage({
-    type: 'danger',
-    text: data.message || (isSignup ? 'Erro ao registrar o usuário.' : 'Usuário não existe.'),
-  });
-
-}
-  
-} catch (error) {
-//Maneje errores de red
-setMessage({ type: 'danger', text: 'Erro na rede. Tente novamente mais tarde.' });
-}
-};
-
 ///////////////////////edicion 6 se inscriver
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
@@ -450,3 +316,107 @@ export default function SeInscrever() {
             </span>
           )}
         </div>
+     
+
+        ///////////////////////////////Seinscrever con funcion fetch se cambia para axion
+
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+      
+          if (isSignup) {
+            if (formData.password !== formData.confirmPassword) {
+              setMessage({ type: 'danger', text: 'As senhas não coincidem.' });
+              return;
+            }
+      
+            const exists = await userExists(formData.username, formData.email, formData.password);
+            if (exists) {
+              setMessage({ type: 'danger', text: 'O usuário já existe. Tente fazer login.' });
+              return;
+            }
+          }
+      
+          const url = isSignup 
+            ? 'http://127.0.0.1:3307/users'
+            : 'http://127.0.0.1:3307/users/login';
+      
+          try {
+            const response = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              credentials: 'include',
+              body: JSON.stringify(formData),
+            });
+      
+            const data = await response.json();
+      
+            if (response.ok) {
+              setMessage({ type: 'success', 
+                           text: isSignup 
+                           ? 'Um e-mail chegará em sua conta de correio para concluir seu cadastro, confirme...'
+                           : 'Usuário logado com sucesso!' 
+                           });
+        
+              if (!isSignup) {
+                setUser({ username: formData.username });
+                // Guardar token en localStorage si rememberMe está marcado
+              if (formData.rememberMe) {
+                localStorage.setItem('token', data.token);
+              } else {
+                sessionStorage.setItem('token', data.token);
+              }
+              }
+            } else if (response.status === 409) {
+              setMessage({
+                type: 'danger',
+                text: 'O email já está registrado. Por favor, use outro email.',
+              });
+            } else if (response.status === 400 && data.message === 'Grupo familiar no encontrado') {
+              setMessage({
+                type: 'danger',
+                text: 'El grupo familiar especificado no existe. Por favor, verifica e intenta nuevamente.',
+              });
+            } else {
+              setMessage({
+                type: 'danger',
+                text: data.message || (isSignup ? 'Erro ao registrar o usuário.' : 'Usuário não existe.'),
+              });
+            }
+          } catch (error) {
+            setMessage({ type: 'danger', text: 'Erro na rede. Tente novamente mais tarde.' });
+          }
+        };
+
+        ///////////////Usercontext.js version 2 se muda para verificar el token vencido
+
+        import React, { createContext, useState, useEffect } from 'react';
+
+import { jwtDecode } from 'jwt-decode';
+export const UserContext = createContext();
+
+export const UserProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const username = decodedToken.username || 'Usuario';
+        setUser({ username });
+      } catch (error) {
+        console.error('Token inválido:', error);
+      }
+    }
+  }, []);
+
+  return (
+    <UserContext.Provider value={{ user, setUser }}>
+      {children}
+    </UserContext.Provider>
+  );
+};
+
+///////////////////////  {user && <span style={{ marginLeft: '15px', color: 'darkblue', fontWeight: 'bold'   }}>Usuario {user.username}</span>}

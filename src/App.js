@@ -16,15 +16,31 @@ import SocialMediaButtons from './components/SocialMediaButtons';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import { LinkContainer } from 'react-router-bootstrap';
+import { HelmetProvider } from 'react-helmet-async';
 import { Helmet } from 'react-helmet-async';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { UserProvider, UserContext } from './UserContext'; // Importar el contexto del usuario
 import EmailConfirmation from './Screens/EmailConfirmation'; // Importar EmailConfirmation
-
+import './index.css'; // Asegúrate de importar tu archivo CSS
 function Header() {
   const { user } = useContext(UserContext);
 
   return (
     <header>
+     <div className="user-info-bar">
+        <Container>
+          <Row>
+            <Col className="text-right">
+              {user && (
+                <span style={{ color: 'black'}}>
+                   Bem-vindo: {user.username}
+                </span>
+              )}
+            </Col>
+          </Row>
+        </Container>
+      </div>
       <Navbar className='menu-header'>
         <Container>
           <LinkContainer to="/" exact>
@@ -54,7 +70,7 @@ function Header() {
             })}>
               Registro
             </NavLink>
-            {user && <span style={{ marginLeft: '15px' }}>Bem-vindo: {user.username}</span>}
+           
           </div>
         </Container>
       </Navbar>
@@ -65,6 +81,7 @@ function Header() {
 export default function App() {
   return (
     <UserProvider>
+      <HelmetProvider>
       <BrowserRouter>
         <div className='d-flex flex-column site-container'>
           <Helmet>
@@ -102,6 +119,7 @@ export default function App() {
           </footer>
         </div>
       </BrowserRouter>
+      </HelmetProvider>
     </UserProvider>
   );
 }

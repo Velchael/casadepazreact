@@ -5,9 +5,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /*display: flex;*/
-  /*align-items: center;*/
-  /*text-align: center;*/
 }
 
 header {
@@ -18,61 +15,42 @@ header {
   width: 100%;
   height: 6rem;
 }
-
+/*  usuario logado en la parte superior */
+.user-info-bar {
+    position: fixed; /* Fija la barra en la ventana del navegador */
+    top: 0; /* Coloca la barra en la parte superior */
+    right: 0; /* Coloca la barra en la esquina derecha */
+    padding: 3px 0; /* Espaciado opcional */
+    background-color: white; /* Cambia el color de fondo si es necesario */
+    z-index: 1000; /* Ajusta la profundidad para asegurarse de que esté encima de otros elementos */
+  
+}
+.user-info {
+  margin-left: auto; /* Empuja el contenido a la derecha */
+  display: flex;
+  align-items: center;
+  color: darkblue;
+  font-weight: bold;
+}
 .site-container {
   min-height: 100vh;
 }
-
 .menu {
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: bold;
 }
-
 main {
   flex: 1;
 }
-
 .btn {
   background-color: #fdbb05;
   color: #431a03;
   font-weight: bold;
 }
-
-.product-name {
-  text-decoration: none;
-  color: #431a03;
-}
-
-.rating span {
-  color: #fde406;
-}
-
 .img-large {
   max-width: 55%;
-}
-
-.produtos {
-  display: flex; /*uno al lado de otro*/
-  flex-wrap: wrap; /* os novos são empurrados para baixo*/
-  justify-content: center; /*para centralos*/
-}
-
-.cars {
-  /*background-color: rgb(7, 7, 166);*/
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.centrasobrenos {
-  align-items: center;
-  display: flex;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
 }
 
 .App-logo {
@@ -83,40 +61,6 @@ main {
   max-width: 100%;
   max-height: 100%;
 }
-
-.presenta_css {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  margin: 0 auto;
-  width: 40vw;
-  height: 40vh;
-  padding: 30px;
-  border: 6px solid black;
-  border-radius: 4em;
-  /*background-color: #f7f7f7;*/
-  margin-top: 4em;
-}
-
-.presenta_css h3 {
-  font-size: 1.6rem;
-  padding: 0;
-  margin-bottom: 10px;
-  margin-top: 0px;
-}
-
-.presenta_css form {
-  height: 90%;
-  font-size: 1.2rem;
-  padding: 0;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  text-align: start;
-}
-
 .controls {
   padding: 5px;
   border-radius: 4px;
@@ -197,8 +141,6 @@ h5 {
 p {
   text-align: center;
 }
-
-
 .imgempregadois {
   width: 48%;
   max-width: 400px;
@@ -227,20 +169,6 @@ p {
 }
 .imgservico:hover {
   transform: scale(1.2);
-}
-
-
-.ticket {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 20px;
-  justify-content: center;
-  background-color: #fca50315;
-}
-
-.ticket > div {
-  margin: 10px; /* Agrega un margen entre las tarjetas */
-  padding: 10px; /* Agrega separación en los cuatro lados de las tarjetas */
 }
 
 .small-container {
@@ -285,8 +213,6 @@ footer {
   border-color: rgba(202, 147, 43); /* Opcional: para cambiar el color del borde */
  /* color: #fff; /* Opcional: para cambiar el color del texto a blanco */
 }
-/*  botones del foter                             */
-
 
 .list-unstyled {
   display: flex;
