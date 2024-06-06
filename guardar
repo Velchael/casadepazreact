@@ -299,24 +299,6 @@ export default function SeInscrever() {
   );
 }
 
-/////////////////////mantener secion iniciada 
-<div className="mb-3">
-          <Button type="submit">{isSignup ? 'Registrar' : 'Entrar'}</Button>
-        </div>
-        <div className="mb-3">
-          {isSignup ? (
-            <span>
-              Já tem uma conta?{' '}
-              <Link to="#" onClick={() => setIsSignup(false)}>Entrar</Link>
-            </span>
-          ) : (
-            <span>
-              Novo usuário?{' '}
-              <Link to="#" onClick={() => setIsSignup(true)}>Crie sua conta</Link>
-            </span>
-          )}
-        </div>
-     
 
         ///////////////////////////////Seinscrever con funcion fetch se cambia para axion
 
@@ -389,34 +371,8 @@ export default function SeInscrever() {
           }
         };
 
-        ///////////////Usercontext.js version 2 se muda para verificar el token vencido
-
-        import React, { createContext, useState, useEffect } from 'react';
-
-import { jwtDecode } from 'jwt-decode';
-export const UserContext = createContext();
-
-export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    if (token) {
-      try {
-        const decodedToken = jwtDecode(token);
-        const username = decodedToken.username || 'Usuario';
-        setUser({ username });
-      } catch (error) {
-        console.error('Token inválido:', error);
-      }
-    }
-  }, []);
-
-  return (
-    <UserContext.Provider value={{ user, setUser }}>
-      {children}
-    </UserContext.Provider>
-  );
-};
+   
 
 ///////////////////////  {user && <span style={{ marginLeft: '15px', color: 'darkblue', fontWeight: 'bold'   }}>Usuario {user.username}</span>}
+
+///////////////////////package.jon  "@babel/plugin-transform-private-property-in-object": "^7.24.6"

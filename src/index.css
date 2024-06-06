@@ -6,7 +6,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 header {
   background-color: #ca932b;
   padding: 1rem;
@@ -21,7 +20,7 @@ header {
     top: 0; /* Coloca la barra en la parte superior */
     right: 0; /* Coloca la barra en la esquina derecha */
     padding: 3px 0; /* Espaciado opcional */
-    background-color: white; /* Cambia el color de fondo si es necesario */
+    background-color: #ca932b;
     z-index: 1000; /* Ajusta la profundidad para asegurarse de que esté encima de otros elementos */
   
 }
@@ -52,7 +51,6 @@ main {
 .img-large {
   max-width: 55%;
 }
-
 .App-logo {
   height: 12vmin;
   padding: 0 1rem;
@@ -69,7 +67,6 @@ main {
   font-size: 1rem;
   margin-bottom: 0.5rem;
 }
-
 .button {
   margin-top: 1rem;
   background-color: #ca932b;
@@ -79,38 +76,31 @@ main {
   border-radius: 0.4rem;
   border: 0.1rem solid black;
 }
-
 .Containerdos {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-
 }
-
 .Containerdos ul li {
   list-style: none;
   color: white;
 }
-
 .Containerdos ul li a {
   text-decoration: none;
   list-style: none;
   color: #333;
 }
-
 .h1emprega {
   color: #333;
   font-size: 24px;
   font-weight: bold;
 }
-
 .ulemprega {
   list-style: disc;
   color: #666;
   margin-bottom: 10px;
   padding-left: 20px;
 }
-
 .imgemprega {
   width: 50%;
   max-width: 400px;
@@ -121,7 +111,6 @@ main {
   cursor: pointer;
   transition: transform 0.3s ease;
 }
-
 .imgservico {
   width: 50%;
   max-width: 400px;
@@ -133,11 +122,9 @@ main {
   cursor: pointer;
   transition: transform 0.3s ease;
 }
-
 h5 {
   text-align: center;
 }
-
 p {
   text-align: center;
 }
@@ -145,17 +132,13 @@ p {
   width: 48%;
   max-width: 400px;
   height: auto;
- /* margin-bottom: 20px;
-  margin-right: 20px;*/
   border-radius: 5px;
   box-shadow: 0 3px 4px #ca932b;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
-
 .imgservicodois {
   width: 100%;
-  /*max-width: 400px;*/
   height: auto;
   margin-bottom: 20px;
   border-radius: 5px;
@@ -207,24 +190,20 @@ footer {
 .foto2desender{
   margin-top: 20px; 
 }
-
 .custom-primary {
   background-color: rgba(202, 147, 43);
   border-color: rgba(202, 147, 43); /* Opcional: para cambiar el color del borde */
  /* color: #fff; /* Opcional: para cambiar el color del texto a blanco */
 }
-
 .list-unstyled {
   display: flex;
   justify-content: center;
   align-items: center; /* Alinea los botones verticalmente en el centro */
   list-style-type: none;
 }
-
 .list2 {
   margin-right: 5px;
 }
-
 .list2 a {
   display: inline-block;
   border-radius: 10px;
@@ -238,17 +217,14 @@ footer {
 .list2:last-child a {
   margin-right: 0; /* Elimina el margen derecho del último botón para evitar espacio adicional */
 }
-
 .list2 a:hover {
   background-color: #0056b3; /* Cambia el color de fondo al pasar el cursor */
   transform: translateY(-2px); /* Agrega un ligero desplazamiento hacia arriba al pasar el cursor */
 }
-
 @media (max-width: 768px) {
   .list-unstyled {
     flex-wrap: wrap;
   }
-
   .list2 {
     margin-bottom: 10px;
     margin-right: 0; /* Elimina el margen derecho en dispositivos móviles */
