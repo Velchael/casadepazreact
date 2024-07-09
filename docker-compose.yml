@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  casapazreact:
+    build: .
+    container_name: casapazreact
+    ports:
+      - "3001:80"
+ 

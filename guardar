@@ -1,378 +1,56 @@
+version: '3.8'
 
+services:
+  casapazreact:
+    build:
+      context: .
+    ports:
+      - "3000:80"
+    networks:
+      - app-network
 
-///////////////////////edicion 6 se inscriver
-import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Alert from 'react-bootstrap/Alert';
-import { Helmet } from 'react-helmet-async';
-import { UserContext } from '../UserContext';
+networks:
+  app-network:
+    external: true
 
-export default function SeInscrever() {
-  const { setUser } = useContext(UserContext);
+///////version 2
 
-  const [isSignup, setIsSignup] = useState(false);
-  
-  const [formData, setFormData] = useState({
-    username: '',
-    apellido: '',
-    email: '',
-    password: '',
-    rol: 'miembro',
-    confirmPassword: '',
-    fecha_nacimiento: '',
-    telefono: '',
-    direccion: '',
-    nivel_liderazgo: 'Nivel1',
-    grupo_familiar_id: '',
-    estado: 'activo',
-    foto_perfil: ''
-  });
+version: '3.8'
 
-  const [message, setMessage] = useState({ type: '', text: '' });
+services:
+  casapazreact:
+    build: .
+    container_name: casapazreact
+    ports:
+      - "3000:80"
+    networks:
+      - app-network
 
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [id]: value
-    }));
-  };
+networks:
+  app-network:
+    external: true
 
-  // Función para verificar si el usuario existe
-  const userExists = async (username, email, password) => {
-    try {
-      const response = await fetch('http://127.0.0.1:3307/users/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ username, email, password })
-      });
+    /////////el default con a rede
+    
+    server {
+    listen 80;
+    server_name localhost;
 
-      if (response.status === 200) {
-        const user = await response.json();
-        return !!user; // Regresa true si el usuario existe, false en caso contrario
-      } else if (response.status === 404) {
-        return false;
-      }
-    } catch (error) {
-      console.error('Error al verificar el usuario:', error);
-      return false;
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (isSignup) {
-      if (formData.password !== formData.confirmPassword) {
-        setMessage({ type: 'danger', text: 'As senhas não coincidem.' });
-        return;
-      }
-
-      const exists = await userExists(formData.username, formData.email, formData.password);
-      if (exists) {
-        setMessage({ type: 'danger', text: 'O usuário já existe. Tente fazer login.' });
-        return;
-      }
+    location / {
+        root /usr/share/nginx/html;
+        try_files $uri /index.html;
     }
 
-    const url = isSignup 
-      ? 'http://127.0.0.1:3307/users'
-      : 'http://127.0.0.1:3307/users/login';
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessage({ type: 'success', 
-                     text: isSignup 
-                     ? 'Um e-mail chegará em sua conta de correio para concluir seu cadastro, confirme...'
-                     : 'Usuário logado com sucesso!' 
-                     });
-  
-        if (!isSignup) {
-          setUser({ username: formData.username });
-        }
-      } else if (response.status === 409) {
-        setMessage({
-          type: 'danger',
-          text: 'O email já está registrado. Por favor, use outro email.',
-        });
-      } else if (response.status === 400 && data.message === 'Grupo familiar no encontrado') {
-        setMessage({
-          type: 'danger',
-          text: 'El grupo familiar especificado no existe. Por favor, verifica e intenta nuevamente.',
-        });
-      } else {
-        setMessage({
-          type: 'danger',
-          text: data.message || (isSignup ? 'Erro ao registrar o usuário.' : 'Usuário não existe.'),
-        });
-      }
-    } catch (error) {
-      setMessage({ type: 'danger', text: 'Erro na rede. Tente novamente mais tarde.' });
+    location /api/ {
+        proxy_pass http://backusuario:3307/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
-  };
 
-  return (
-    <Container className="small-container">
-      <Helmet>
-        <title>{isSignup ? 'Registro' : 'Login'}</title>
-      </Helmet>
-      <h1 className="my-3">{isSignup ? 'Registro' : 'Login'}</h1>
-      <Form onSubmit={handleSubmit}>
-        {message.text && (
-          <Alert variant={message.type}>
-            {message.text}
-          </Alert>
-        )}
-        <Form.Group className="mb-3" controlId="username">
-          <Form.Label>Nome</Form.Label>
-          <Form.Control
-            type="text"
-            required
-            placeholder="Digite seu nome"
-            value={formData.username}
-            onChange={handleChange}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="apellido">
-          <Form.Label>Sobrenome</Form.Label>
-          <Form.Control
-            type="text"
-            required
-            placeholder="Digite seu apellido"
-            value={formData.apellido}
-            onChange={handleChange}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="email">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            required
-            placeholder="exemplo@gmail.com"
-            value={formData.email}
-            onChange={handleChange}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="password">
-          <Form.Label>Senha</Form.Label>
-          <Form.Control
-            type="password"
-            required
-            placeholder="Digite sua senha"
-            value={formData.password}
-            onChange={handleChange}
-          />
-        </Form.Group>
-        {isSignup && (
-          <>
-            <Form.Group className="mb-3" controlId="confirmPassword">
-              <Form.Label>Confirme a Senha</Form.Label>
-              <Form.Control
-                type="password"
-                required
-                placeholder="Confirme sua senha"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="rol">
-              <Form.Label>Rol</Form.Label>
-              <Form.Control
-                as="select"
-                required
-                value={formData.rol}
-                onChange={handleChange}
-              >
-                <option value="miembro">Miembro</option>
-                <option value="lider">Líder</option>
-                <option value="pastor">Pastor</option>
-                <option value="administrador">Administrador</option>
-              </Form.Control>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="fecha_nacimiento">
-              <Form.Label>Data de nascimento</Form.Label>
-              <Form.Control
-                type="date"
-                required
-                value={formData.fecha_nacimiento}
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="telefono">
-              <Form.Label>Teléfone</Form.Label>
-              <Form.Control
-                type="text"
-                required
-                placeholder="Digite seu teléfono"
-                value={formData.telefono}
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="direccion">
-              <Form.Label>Endereço</Form.Label>
-              <Form.Control
-                type="text"
-                required
-                placeholder="Digite sua dirección"
-                value={formData.direccion}
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="nivel_liderazgo">
-              <Form.Label>Nível de liderança</Form.Label>
-              <Form.Control
-                as="select"
-                value={formData.nivel_liderazgo}
-                onChange={handleChange}
-              >
-                <option value="Nivel1">Nivel 1</option>
-                <option value="Nivel2">Nivel 2</option>
-                <option value="Nivel3">Nivel 3</option>
-              </Form.Control>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="grupo_familiar_id">
-              <Form.Label>Grupo Familiar ID</Form.Label>
-              <Form.Control
-                type="number"
-                value={formData.grupo_familiar_id}
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="estado">
-              <Form.Label>Estado</Form.Label>
-              <Form.Control
-                as="select"
-                value={formData.estado}
-                onChange={handleChange}
-              >
-                <option value="activo">Activo</option>
-                <option value="inactivo">Inactivo</option>
-                <option value="pendiente">Pendiente</option>
-              </Form.Control>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="foto_perfil">
-              <Form.Label>Imagem de perfil</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="URL da imagem de perfil"
-                value={formData.foto_perfil}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </>
-        )}
-        <div className="mb-3">
-          <Button type="submit">{isSignup ? 'Registrar' : 'Entrar'}</Button>
-        </div>
-        <div className="mb-3">
-          {isSignup ? (
-            <span>
-              Já tem uma conta?{' '}
-              <Link to="#" onClick={() => setIsSignup(false)}>Entrar</Link>
-            </span>
-          ) : (
-            <span>
-              Novo usuário?{' '}
-              <Link to="#" onClick={() => setIsSignup(true)}>Crie sua conta</Link>
-            </span>
-          )}
-        </div>
-      </Form>
-    </Container>
-  );
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
 }
-
-
-        ///////////////////////////////Seinscrever con funcion fetch se cambia para axion
-
-        const handleSubmit = async (e) => {
-          e.preventDefault();
-      
-          if (isSignup) {
-            if (formData.password !== formData.confirmPassword) {
-              setMessage({ type: 'danger', text: 'As senhas não coincidem.' });
-              return;
-            }
-      
-            const exists = await userExists(formData.username, formData.email, formData.password);
-            if (exists) {
-              setMessage({ type: 'danger', text: 'O usuário já existe. Tente fazer login.' });
-              return;
-            }
-          }
-      
-          const url = isSignup 
-            ? 'http://127.0.0.1:3307/users'
-            : 'http://127.0.0.1:3307/users/login';
-      
-          try {
-            const response = await fetch(url, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              credentials: 'include',
-              body: JSON.stringify(formData),
-            });
-      
-            const data = await response.json();
-      
-            if (response.ok) {
-              setMessage({ type: 'success', 
-                           text: isSignup 
-                           ? 'Um e-mail chegará em sua conta de correio para concluir seu cadastro, confirme...'
-                           : 'Usuário logado com sucesso!' 
-                           });
-        
-              if (!isSignup) {
-                setUser({ username: formData.username });
-                // Guardar token en localStorage si rememberMe está marcado
-              if (formData.rememberMe) {
-                localStorage.setItem('token', data.token);
-              } else {
-                sessionStorage.setItem('token', data.token);
-              }
-              }
-            } else if (response.status === 409) {
-              setMessage({
-                type: 'danger',
-                text: 'O email já está registrado. Por favor, use outro email.',
-              });
-            } else if (response.status === 400 && data.message === 'Grupo familiar no encontrado') {
-              setMessage({
-                type: 'danger',
-                text: 'El grupo familiar especificado no existe. Por favor, verifica e intenta nuevamente.',
-              });
-            } else {
-              setMessage({
-                type: 'danger',
-                text: data.message || (isSignup ? 'Erro ao registrar o usuário.' : 'Usuário não existe.'),
-              });
-            }
-          } catch (error) {
-            setMessage({ type: 'danger', text: 'Erro na rede. Tente novamente mais tarde.' });
-          }
-        };
-
-   
-
-///////////////////////  {user && <span style={{ marginLeft: '15px', color: 'darkblue', fontWeight: 'bold'   }}>Usuario {user.username}</span>}
-
-///////////////////////package.jon  "@babel/plugin-transform-private-property-in-object": "^7.24.6"

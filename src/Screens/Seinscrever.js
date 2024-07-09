@@ -43,7 +43,7 @@ export default function SeInscrever() {
   // Función para verificar si el usuario existe
   const userExists = async (username, email, password) => {
     try {
-      const response = await fetch('https://intelsiteweb.com/appnode/users/login', {
+      const response = await fetch('http://localhost:3007/api/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,8 +81,8 @@ export default function SeInscrever() {
     }
 
     const url = isSignup 
-        ? 'https://intelsiteweb.com/appnode/users'
-        : 'https://intelsiteweb.com/appnode/users/login';
+        ? 'http://localhost:3307/api/users'
+        : 'http://localhost:3307/api/users/login';
 
     try {
         const response = await axios.post(url, formData);
@@ -101,7 +101,6 @@ export default function SeInscrever() {
                 } else {
                     sessionStorage.setItem('token', data.token);
                 }
-
                 const decodedToken = jwtDecode(data.token);
                 const username = decodedToken.username || 'Usuario';
                 setUser({ username });
@@ -123,11 +122,14 @@ export default function SeInscrever() {
             });
         }
     } catch (error) {
+      if (error.response && error.response.status === 404) {
+        setMessage({ type: 'danger', text: 'Usuário não encontrado. Por favor, verifique suas credenciais.' });
+      } else {
         console.error('Error al intentar conectarse al servidor:', error);
         setMessage({ type: 'danger', text: 'Erro na rede. Tente novamente mais tarde.' });
+      }
     }
 };
-
   return (
     <Container className="small-container">
       <Helmet>
